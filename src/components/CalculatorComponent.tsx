@@ -1,4 +1,3 @@
-import React from "react";
 import ButtonComponent from "./ButtonComponent";
 import {
   addDecimal,
@@ -10,13 +9,14 @@ import {
   negate,
   setOperator,
 } from "../functions/CalculatorFunctions";
-import SpaceComponent from "./SpaceComponent";
 import { OPERATOR_TYPE } from "../functions/OperatorType";
 import DisplayComponent from "./DisplayComponent";
 
-export type CalculatorComponentProps = {};
-
-export default function CalculatorComponent(props: CalculatorComponentProps) {
+/**
+ * Create the simple calculator component.
+ * @returns the calculator component
+ */
+export default function CalculatorComponent() {
   const clearButton = <ButtonComponent symbol="C" action={clearCalculator} />;
   const clearEntryButton = <ButtonComponent symbol="CE" action={clearEntry} />;
   const digitButtons = [];

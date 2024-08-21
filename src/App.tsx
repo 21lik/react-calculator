@@ -5,7 +5,7 @@ import TitleComponent from './components/TitleComponent';
 function App() {
   return (
     <div className="App">
-      <TitleComponent text="Calculator" />
+      <TitleComponent text="Simple Calculator" />
       <CalculatorComponent />
     </div>
   );

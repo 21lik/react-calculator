@@ -1,7 +1,7 @@
-import React, { MouseEventHandler } from "react";
-
-export type DisplayComponentProps = {};
-
-export default function DisplayComponent(props: DisplayComponentProps) {
+/**
+ * Create the display component, showing the current calculator result/operand.
+ * @returns the display component
+ */
+export default function DisplayComponent() {
   return <div id="display">0</div>;
 }
