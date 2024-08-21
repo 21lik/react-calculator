@@ -2,7 +2,39 @@
   text-align: center;
 }
 
-.App-logo {
+#calculator {
+  border-style: solid;
+  border-color: black;
+  display: inline-block;
+  position: relative;
+  background-color: lightgray;
+  width: fit-content;
+  align-self: center;
+}
+
+#display {
+  border-style: solid;
+  border-color: black;
+  border-width: 1px;
+}
+
+.button {
+  display: inline-block;
+  font-size: 20px;
+  cursor: pointer;
+  width: 50px;
+}
+
+.button:hover {
+  background-color: lightblue;
+}
+
+.space {
+  display: inline-block;
+  width: 50px;
+}
+
+/* .App-logo {
   height: 40vmin;
   pointer-events: none;
 }
@@ -35,4 +67,4 @@
   to {
     transform: rotate(360deg);
   }
-}
+} */
