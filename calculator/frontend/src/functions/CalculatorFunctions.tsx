@@ -2,7 +2,7 @@ import { OPERATOR_TYPE } from "./OperatorType";
 
 let result: number = 0;
 let operandString: string = "0";
-let done: boolean = true;
+let doneStep: boolean = false, doneEquation = false;
 
 let operatorFunction: ((arg0: number, arg1: number) => number) = add;
 
@@ -35,39 +35,55 @@ export function clearCalculator() {
     result = 0;
     clearEntry();
     operatorFunction = add;
-    done = true;
+    doneStep = false;
+    doneEquation = false;
 }
 
 export function addDigit(digit: string) {
-    if (done || operandString === "0")
+    if (doneStep || operandString === "0")
         operandString = digit;
     else
         operandString += digit;
     setDisplay(operandString);
-    done = false;
+    doneStep = false;
+    doneEquation = false;
 }
 
 export function addDecimal() {
-    if (done || operandString === "0")
+    if (doneEquation) {
+        operandString = "0.";
+        result = 0;
+    }
+    else if (operandString === "0")
         operandString = "0.";
     else
         operandString += ".";
     setDisplay(operandString);
-    done = false;
+    doneStep = false;
+    doneEquation = false;
 }
 
 export function negate() {
-    if (operandString === "0")
+    if (doneEquation) {
+        result = -result;
+        setDisplay(result.toString());
+        return;
+    }
+    else if (doneStep)
+        operandString = (-result).toString();
+    else if (operandString === "0")
         return;
     else if (operandString.charAt(0) === '-')
         operandString = operandString.substring(1);
     else
         operandString = "-" + operandString;
     setDisplay(operandString);
+    doneStep = false;
+    doneEquation = false;
 }
 
 export function backspace() {
-    if (done || operandString === "0")
+    if (doneStep || operandString === "0")
         return;
     else if (operandString.length === 1)
         operandString = "0";
@@ -80,16 +96,18 @@ export function backspace() {
 }
 
 export function execute() {
-    if (!done) {
+    if (!doneStep) {
         result = operatorFunction(result, Number.parseFloat(operandString));
         setDisplay(result.toString());
     }
     operandString = "0";
-    done = true;
+    doneStep = true;
+    doneEquation = true;
 }
 
 export function setOperator(operator: OPERATOR_TYPE) {
     execute();
+    doneEquation = false;
     switch (operator) {
         case OPERATOR_TYPE.ADD:
             operatorFunction = add;
