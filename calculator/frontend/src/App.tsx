@@ -1,3 +1,4 @@
+import React from 'react';
 import './App.css';
 import CalculatorComponent from './components/CalculatorComponent';
 import TitleComponent from './components/TitleComponent';

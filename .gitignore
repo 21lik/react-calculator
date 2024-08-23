@@ -8,6 +8,10 @@ calculator/frontend/.pnp.js
 # virtual environment
 .venv
 
+# migrations
+calculator/history/migrations
+calculator/memory/migrations
+
 # testing
 calculator/frontend/coverage
 

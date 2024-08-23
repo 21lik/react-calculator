@@ -29,6 +29,15 @@
   background-color: lightblue;
 }
 
+.button_disabled {
+  background-color: lightgray;
+  color: darkgray;
+  display: inline-block;
+  font-size: 20px;
+  cursor: default;
+  width: 50px;
+}
+
 .space {
   display: inline-block;
   width: 50px;

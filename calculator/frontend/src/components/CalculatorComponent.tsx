@@ -1,3 +1,4 @@
+import React, { ReactElement } from "react";
 import ButtonComponent from "./ButtonComponent";
 import {
   addDecimal,
@@ -11,6 +12,7 @@ import {
 } from "../functions/CalculatorFunctions";
 import { OPERATOR_TYPE } from "../functions/OperatorType";
 import DisplayComponent from "./DisplayComponent";
+import MemoryButtonSectionComponent from "./MemoryButtonSectionComponent";
 
 /**
  * Create the simple calculator component.
@@ -19,7 +21,7 @@ import DisplayComponent from "./DisplayComponent";
 export default function CalculatorComponent() {
   const clearButton = <ButtonComponent symbol="C" action={clearCalculator} />;
   const clearEntryButton = <ButtonComponent symbol="CE" action={clearEntry} />;
-  const digitButtons = [];
+  const digitButtons: ReactElement<any, any>[] = [];
   for (let i: number = 0; i <= 9; i++)
     digitButtons[i] = (
       <ButtonComponent
@@ -66,6 +68,8 @@ export default function CalculatorComponent() {
         <br />
         {negButton} {digitButtons[0]} {decButton} {equalButton}
       </div>
+      <br />
+      <MemoryButtonSectionComponent />
     </div>
   );
 }
