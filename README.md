@@ -17,12 +17,12 @@ Underneath the calculator are six buttons that perform actions on the memory usi
 * MR: Recall the latest memory entry.
 * M+: Add the current value on the calculator display to the latest memory entry.
 * M-: Subtract the current value on the calculator display from the latest memory entry.
-* MS: Store the current value on the calculator display into the memory database.
+* MS: Store the current value on the calculator display in the memory database.
 * M: Toggle the display for the memory list. This list is updated whenever the database is updated.
 
-When the memory list is shown, each entry consists of a timestamp, the value (in bold), and the word “Recall” that can be pressed to recall that memory entry to the calculator.
+When the memory list is shown, each entry consists of a timestamp, the value (in bold), and the word "Recall" that can be pressed to recall that memory entry to the calculator.
 
-I also created a Django application for the history, but it has not been implemented thus far.
+I also created a Django application for the history, but it has yet to be implemented.
 
 ## Running the Application
 
