@@ -41,7 +41,7 @@ INSTALLED_APPS = [
     'rest_framework',
     'corsheaders',
 
-    'memory',
+    'memory', # TODO: also add history
 ]
 
 MIDDLEWARE = [

@@ -296,11 +296,9 @@ export function memoryAdd() {
       postNewMemoryEntry(operand).then((response) => {
         console.log(response.statusText);
         console.log("Memory empty, added to 0:", operand);
+        enableAllMemoryButtonsRequireEntries();
+        // TODO: rerender memory list if needed?
       });
-    })
-    .finally(() => {
-      enableAllMemoryButtonsRequireEntries();
-      // TODO: rerender memory list if needed?
     });
 }
 
@@ -327,11 +325,9 @@ export function memorySubtract() {
       postNewMemoryEntry(-operand).then((response) => {
         console.log(response.statusText);
         console.log("Memory empty, subtracted from 0:", -operand);
+        enableAllMemoryButtonsRequireEntries();
+        // TODO: rerender memory list if needed?
       });
-    })
-    .finally(() => {
-      enableAllMemoryButtonsRequireEntries();
-      // TODO: rerender memory list if needed?
     });
 }
 
