@@ -18,6 +18,11 @@ calculator/frontend/coverage
 # production
 calculator/frontend/build
 
+# pycache
+calculator/calculator/__pycache__
+calculator/history/__pycache__
+calculator/memory/__pycache__
+
 # misc
 calculator/frontend/.DS_Store
 calculator/frontend/.env.local

@@ -1,4 +1,4 @@
-import { OPERATOR_TYPE } from "./OperatorType";
+import { OPERATOR_TYPE } from "../constants/OperatorType";
 import axios from "axios";
 import {
   disabledButtonClass,
@@ -8,6 +8,12 @@ import {
   MEMORY_LIST_API_URL,
   NEW_MEMORY_API_URL,
 } from "../constants";
+import {
+  deleteMemoryList,
+  getLatestMemoryEntry,
+  postNewMemoryEntry,
+  setLatestMemoryEntry,
+} from "../api/CalculatorAPI";
 
 let result: number = 0;
 let operandString: string = "0";
@@ -69,8 +75,7 @@ function setDisplay(str: string) {
  * This function is equivalent to `clearCalculator()` if the equation is solved.
  */
 export function clearEntry() {
-  if (doneEquation)
-    clearCalculator();
+  if (doneEquation) clearCalculator();
   else {
     operandString = "0";
     setDisplay(operandString);
@@ -254,7 +259,7 @@ function disableAllMemoryButtonsRequireEntries() {
  * Clear the calculator memory.
  */
 export function memoryClear() {
-  axios.delete(MEMORY_LIST_API_URL).then((response) => {
+  deleteMemoryList().then((response) => {
     console.log(response.statusText);
     disableAllMemoryButtonsRequireEntries();
     // unrenderMemoryList();
@@ -266,7 +271,7 @@ export function memoryClear() {
  * Recall the latest calculator memory entry.
  */
 export function memoryRecall() {
-  axios.get(LATEST_MEMORY_API_URL).then((response) => {
+  getLatestMemoryEntry().then((response) => {
     console.log(response.statusText);
     operandString = response.data.value.toString();
     setDisplay(operandString);
@@ -280,46 +285,62 @@ export function memoryRecall() {
  * Add the current calculator value to the latest memory entry.
  */
 export function memoryAdd() {
-  axios.get(LATEST_MEMORY_API_URL).then((response0) => {
-    console.log(response0.statusText);
-    const operand: number = doneStep ? result : parseFloat(operandString);
-    axios
-      .put(LATEST_MEMORY_API_URL, { value: response0.data.value + operand })
-      .then((response1) => {
+  const operand: number = doneStep ? result : parseFloat(operandString);
+  getLatestMemoryEntry()
+    .then((response0) => {
+      console.log(response0.statusText);
+      setLatestMemoryEntry(response0.data.value + operand).then((response1) => {
         console.log(response1.statusText);
-        // rerenderMemoryList();
         console.log(
           "Added to latest memory entry",
           response0.data.value,
           "to",
           response0.data.value + operand
         );
-        // TODO: rerender memory list if needed?
       });
-  });
+    })
+    .catch((reason) => {
+      console.log(reason);
+      postNewMemoryEntry(operand).then((response) => {
+        console.log(response.statusText);
+        console.log("Memory empty, added to 0:", operand);
+      });
+    })
+    .finally(() => {
+      enableAllMemoryButtonsRequireEntries();
+      // TODO: rerender memory list if needed?
+    });
 }
 
 /**
  * Subtract the current calculator value from the latest memory entry.
  */
 export function memorySubtract() {
-  axios.get(LATEST_MEMORY_API_URL).then((response0) => {
-    console.log(response0.statusText);
-    const operand: number = doneStep ? result : parseFloat(operandString);
-    axios
-      .put(LATEST_MEMORY_API_URL, { value: response0.data.value - operand })
-      .then((response1) => {
+  const operand: number = doneStep ? result : parseFloat(operandString);
+  getLatestMemoryEntry()
+    .then((response0) => {
+      console.log(response0.statusText);
+      setLatestMemoryEntry(response0.data.value - operand).then((response1) => {
         console.log(response1.statusText);
-        // rerenderMemoryList();
         console.log(
           "Subtracted to latest memory entry",
           response0.data.value,
           "to",
           response0.data.value - operand
         );
-        // TODO: rerender memory list if needed?
       });
-  });
+    })
+    .catch((reason) => {
+      console.log(reason);
+      postNewMemoryEntry(-operand).then((response) => {
+        console.log(response.statusText);
+        console.log("Memory empty, subtracted from 0:", -operand);
+      });
+    })
+    .finally(() => {
+      enableAllMemoryButtonsRequireEntries();
+      // TODO: rerender memory list if needed?
+    });
 }
 
 /**
@@ -328,9 +349,9 @@ export function memorySubtract() {
 export function memoryStore() {
   // TODO: implement
   const newValue: number = doneStep ? result : parseFloat(operandString);
-  axios.post(NEW_MEMORY_API_URL, { value: newValue }).then((response) => {
+  postNewMemoryEntry(newValue).then((response) => {
     console.log(response.statusText);
-    disableAllMemoryButtonsRequireEntries();
+    enableAllMemoryButtonsRequireEntries();
     // rerenderMemoryList();
     console.log("Stored latest memory entry", newValue);
     // TODO: rerender memory list if needed?

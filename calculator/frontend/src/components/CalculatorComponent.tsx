@@ -10,7 +10,7 @@ import {
   negate,
   setOperator,
 } from "../functions/CalculatorFunctions";
-import { OPERATOR_TYPE } from "../functions/OperatorType";
+import { OPERATOR_TYPE } from "../constants/OperatorType";
 import DisplayComponent from "./DisplayComponent";
 import MemoryButtonSectionComponent from "./MemoryButtonSectionComponent";
 

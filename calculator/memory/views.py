@@ -6,7 +6,7 @@ from .serializers import MemoryEntrySerializer
 
 from .models import MemoryEntry
 
-@api_view(['GET', 'POST', 'PUT', 'DELETE'])
+@api_view(['GET', 'PUT', 'DELETE'])
 def memory(request, id):
   try:
     entry = MemoryEntry.objects.get(id=id)

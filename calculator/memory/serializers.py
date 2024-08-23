@@ -3,5 +3,5 @@ from .models import MemoryEntry
 
 class MemoryEntrySerializer(serializers.ModelSerializer):
   class Meta:
-      model = MemoryEntry 
-      fields = ('value',)
+    model = MemoryEntry 
+    fields = ('id', 'timestamp', 'value',) # TODO: all three or just value?
