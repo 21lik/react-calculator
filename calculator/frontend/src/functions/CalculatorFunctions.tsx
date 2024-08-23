@@ -1,13 +1,5 @@
 import { OPERATOR_TYPE } from "../constants/OperatorType";
-import axios from "axios";
-import {
-  disabledButtonClass,
-  enabledButtonClass,
-  LATEST_MEMORY_API_URL,
-  MEMORY_API_URL,
-  MEMORY_LIST_API_URL,
-  NEW_MEMORY_API_URL,
-} from "../constants";
+import { disabledButtonClass, enabledButtonClass } from "../constants";
 import {
   deleteMemoryList,
   getLatestMemoryEntry,

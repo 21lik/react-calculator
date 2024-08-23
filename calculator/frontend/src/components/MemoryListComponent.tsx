@@ -1,12 +1,12 @@
 import React from "react";
 
 export type MemoryEntry = {
-  timestamp: Date,
-  value: number,
-}
+  timestamp: Date;
+  value: number;
+};
 
 export type MemoryListComponentProps = {
-  entries: MemoryEntry[],
+  entries: MemoryEntry[];
 };
 
 /**
@@ -18,7 +18,11 @@ export default function MemoryListComponent(props: MemoryListComponentProps) {
     <div id="memoryList">
       <h2>Memory List</h2>
       <ul>
-        {props.entries.map((entry) => <li>{entry.timestamp.toISOString()}: {entry.value.toString()}</li>)}
+        {props.entries.map((entry) => (
+          <li>
+            {entry.timestamp.toISOString()}: {entry.value.toString()}
+          </li>
+        ))}
       </ul>
     </div>
   );
