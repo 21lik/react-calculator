@@ -5,12 +5,14 @@ import { disabledButtonClass, enabledButtonClass } from "../constants";
 import {
   deleteMemoryList,
   getLatestMemoryEntry,
+  getMemoryEntry,
   getMemoryList,
   postNewMemoryEntry,
   setLatestMemoryEntry,
 } from "../api/CalculatorAPI";
 import MemoryListComponent from "../components/MemoryListComponent";
 import { MemoryEntry } from "../constants/MemoryEntry";
+import { AxiosResponse } from "axios";
 
 let result: number = 0;
 let operandString: string = "0";
@@ -18,6 +20,8 @@ let doneStep: boolean = false,
   doneEquation = false;
 
 let operatorFunction: (arg0: number, arg1: number) => number = add;
+
+let root: ReactDOM.Root | undefined = undefined;
 
 /**
  * Add the arguments.
@@ -84,7 +88,8 @@ export function clearEntry() {
  */
 export function clearCalculator() {
   result = 0;
-  clearEntry();
+  operandString = "0";
+  setDisplay(operandString);
   operatorFunction = add;
   doneStep = false;
   doneEquation = false;
@@ -256,12 +261,10 @@ function disableAllMemoryButtonsRequireEntries() {
  * Re-render, or update, the memory list display, if it is currently open.
  */
 async function updateMemoryListDisplay() {
-  const memList = document.getElementById("memoryList");
-  if (memList !== null) {
-    memList.remove();
-    const container = document.getElementById('memoryListContainer')!;
-    const root = ReactDOM.createRoot(container);
-    root.render(<MemoryListComponent entries={(await getMemoryEntryArray()).reverse()} />);
+  if (root !== undefined) {
+    root.render(
+      <MemoryListComponent entries={(await getMemoryEntryArray()).reverse()} />
+    );
     console.log("Re-rendered memory list");
   }
 }
@@ -270,9 +273,9 @@ async function updateMemoryListDisplay() {
  * Close the memory list display.
  */
 function closeMemoryListDisplay() {
-  const memList = document.getElementById("memoryList");
-  if (memList !== null) {
-    memList.remove();
+  if (root !== undefined) {
+    root.unmount();
+    root = undefined;
     console.log("Closed memory list");
   }
 }
@@ -281,15 +284,16 @@ function closeMemoryListDisplay() {
  * Toggle the memory list display.
  */
 async function toggleMemoryListDisplay() {
-  const memList = document.getElementById("memoryList");
-  if (memList === null) {
-    const container = document.getElementById('memoryListContainer')!;
-    const root = ReactDOM.createRoot(container);
-    root.render(<MemoryListComponent entries={(await getMemoryEntryArray()).reverse()} />);
+  if (root === undefined) {
+    const container = document.getElementById("memoryListContainer")!;
+    root = ReactDOM.createRoot(container);
+    root.render(
+      <MemoryListComponent entries={(await getMemoryEntryArray()).reverse()} />
+    );
     console.log("Opened memory list");
-  }
-  else {
-    memList.remove();
+  } else {
+    root.unmount();
+    root = undefined;
     console.log("Closed memory list");
   }
 }
@@ -319,16 +323,19 @@ export function memoryClear() {
 }
 
 /**
- * Recall the latest calculator memory entry.
+ * Recall the memory entry with the given id, or the latest calculator memory entry if no id is given.
  */
-export function memoryRecall() {
-  getLatestMemoryEntry().then((response) => {
+export function memoryRecall(id?: number) {
+  const response: Promise<AxiosResponse<any, any>> =
+    id === undefined ? getLatestMemoryEntry() : getMemoryEntry(id);
+  response.then((response) => {
     console.log(response.statusText);
     operandString = response.data.value.toString();
     setDisplay(operandString);
     doneStep = false;
     doneEquation = false;
-    console.log("Memory recalled");
+    if (id === undefined) console.log("Latest memory recalled");
+    else console.log("Memory recalled with id", id);
   });
 }
 
@@ -348,8 +355,8 @@ export function memoryAdd() {
           "to",
           response0.data.value + operand
         );
+        updateMemoryListDisplay();
       });
-      updateMemoryListDisplay();
     })
     .catch((reason) => {
       console.log(reason);
@@ -378,8 +385,8 @@ export function memorySubtract() {
           "to",
           response0.data.value - operand
         );
+        updateMemoryListDisplay();
       });
-      updateMemoryListDisplay();
     })
     .catch((reason) => {
       console.log(reason);

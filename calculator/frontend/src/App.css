@@ -43,6 +43,11 @@
   width: 50px;
 }
 
+.memoryEntryLink {
+  color: blue;
+  cursor: pointer;
+}
+
 /* .App-logo {
   height: 40vmin;
   pointer-events: none;
