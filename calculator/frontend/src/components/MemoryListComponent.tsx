@@ -17,7 +17,7 @@ export default function MemoryListComponent(props: MemoryListComponentProps) {
       <ul>
         {props.entries.map((entry) => (
           <li key={entry.id}>
-            {entry.timestamp.toString()}: {entry.value.toString()} (
+            {entry.timestamp.toString()}: <b>{entry.value.toString()}</b> (
             <span
               className="memoryEntryLink"
               onClick={() => memoryRecall(entry.id)}

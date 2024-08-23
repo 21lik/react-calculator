@@ -43,6 +43,10 @@
   width: 50px;
 }
 
+#memoryList {
+  text-align: justify;
+}
+
 .memoryEntryLink {
   color: blue;
   cursor: pointer;
