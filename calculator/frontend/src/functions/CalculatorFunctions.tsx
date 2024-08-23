@@ -1,11 +1,16 @@
+import React from "react";
+import ReactDOM from "react-dom/client";
 import { OPERATOR_TYPE } from "../constants/OperatorType";
 import { disabledButtonClass, enabledButtonClass } from "../constants";
 import {
   deleteMemoryList,
   getLatestMemoryEntry,
+  getMemoryList,
   postNewMemoryEntry,
   setLatestMemoryEntry,
 } from "../api/CalculatorAPI";
+import MemoryListComponent from "../components/MemoryListComponent";
+import { MemoryEntry } from "../constants/MemoryEntry";
 
 let result: number = 0;
 let operandString: string = "0";
@@ -248,13 +253,67 @@ function disableAllMemoryButtonsRequireEntries() {
 }
 
 /**
+ * Re-render, or update, the memory list display, if it is currently open.
+ */
+async function updateMemoryListDisplay() {
+  const memList = document.getElementById("memoryList");
+  if (memList !== null) {
+    memList.remove();
+    const container = document.getElementById('memoryListContainer')!;
+    const root = ReactDOM.createRoot(container);
+    root.render(<MemoryListComponent entries={(await getMemoryEntryArray()).reverse()} />);
+    console.log("Re-rendered memory list");
+  }
+}
+
+/**
+ * Close the memory list display.
+ */
+function closeMemoryListDisplay() {
+  const memList = document.getElementById("memoryList");
+  if (memList !== null) {
+    memList.remove();
+    console.log("Closed memory list");
+  }
+}
+
+/**
+ * Toggle the memory list display.
+ */
+async function toggleMemoryListDisplay() {
+  const memList = document.getElementById("memoryList");
+  if (memList === null) {
+    const container = document.getElementById('memoryListContainer')!;
+    const root = ReactDOM.createRoot(container);
+    root.render(<MemoryListComponent entries={(await getMemoryEntryArray()).reverse()} />);
+    console.log("Opened memory list");
+  }
+  else {
+    memList.remove();
+    console.log("Closed memory list");
+  }
+}
+
+/**
+ * Get the memory list as an array of entries.
+ * @return the array of memory entries
+ */
+export function getMemoryEntryArray() {
+  return getMemoryList().then((response) => {
+    console.log(response.statusText);
+    const data: MemoryEntry[] = response.data;
+    return data;
+  });
+}
+
+/**
  * Clear the calculator memory.
  */
 export function memoryClear() {
   deleteMemoryList().then((response) => {
     console.log(response.statusText);
     disableAllMemoryButtonsRequireEntries();
-    // unrenderMemoryList();
+    closeMemoryListDisplay();
     console.log("Memory cleared");
   });
 }
@@ -290,6 +349,7 @@ export function memoryAdd() {
           response0.data.value + operand
         );
       });
+      updateMemoryListDisplay();
     })
     .catch((reason) => {
       console.log(reason);
@@ -297,7 +357,7 @@ export function memoryAdd() {
         console.log(response.statusText);
         console.log("Memory empty, added to 0:", operand);
         enableAllMemoryButtonsRequireEntries();
-        // TODO: rerender memory list if needed?
+        updateMemoryListDisplay();
       });
     });
 }
@@ -319,6 +379,7 @@ export function memorySubtract() {
           response0.data.value - operand
         );
       });
+      updateMemoryListDisplay();
     })
     .catch((reason) => {
       console.log(reason);
@@ -326,7 +387,7 @@ export function memorySubtract() {
         console.log(response.statusText);
         console.log("Memory empty, subtracted from 0:", -operand);
         enableAllMemoryButtonsRequireEntries();
-        // TODO: rerender memory list if needed?
+        updateMemoryListDisplay();
       });
     });
 }
@@ -335,14 +396,12 @@ export function memorySubtract() {
  * Store the current calculator value to the memory list.
  */
 export function memoryStore() {
-  // TODO: implement
   const newValue: number = doneStep ? result : parseFloat(operandString);
   postNewMemoryEntry(newValue).then((response) => {
     console.log(response.statusText);
     enableAllMemoryButtonsRequireEntries();
-    // rerenderMemoryList();
     console.log("Stored latest memory entry", newValue);
-    // TODO: rerender memory list if needed?
+    updateMemoryListDisplay();
   });
 }
 
@@ -350,6 +409,5 @@ export function memoryStore() {
  * Toggle the memory list.
  */
 export function memory() {
-  // TODO: implement
-  // toggleMemoryList();
+  toggleMemoryListDisplay();
 }

@@ -1,9 +1,5 @@
 import React from "react";
-
-export type MemoryEntry = {
-  timestamp: Date;
-  value: number;
-};
+import { MemoryEntry } from "../constants/MemoryEntry";
 
 export type MemoryListComponentProps = {
   entries: MemoryEntry[];
@@ -20,7 +16,7 @@ export default function MemoryListComponent(props: MemoryListComponentProps) {
       <ul>
         {props.entries.map((entry) => (
           <li>
-            {entry.timestamp.toISOString()}: {entry.value.toString()}
+            {entry.timestamp.toString()}: {entry.value.toString()}
           </li>
         ))}
       </ul>

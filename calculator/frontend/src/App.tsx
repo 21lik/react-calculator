@@ -8,6 +8,7 @@ function App() {
     <div className="App">
       <TitleComponent text="Simple Calculator" />
       <CalculatorComponent />
+      <div id="memoryListContainer"></div>
     </div>
   );
 }
